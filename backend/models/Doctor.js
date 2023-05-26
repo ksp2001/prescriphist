@@ -6,6 +6,7 @@ const DoctorSchema = new mongoose.Schema({
     speciality: {type: String},
     notes: {type: String},
     colour: {type: String, required: true},
+    phone: {type: String},
 });
 
 module.exports = mongoose.model('Doctor', DoctorSchema);
