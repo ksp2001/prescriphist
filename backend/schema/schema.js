@@ -9,20 +9,19 @@ const Fills = require('../models/Fill');
 const DoctorType = new GraphQLObjectType({
     name: 'Doctor',
     fields: () => ({
-        id: {type: GraphQLID},
-        name: {type: GraphQLString},
-        address: {type: GraphQLString},
-        speciality: {type: GraphQLString},
-        notes: {type: GraphQLString},
-        colour: {type: GraphQLString},
-        phone: {type: GraphQLString},
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        address: { type: GraphQLString },
+        speciality: { type: GraphQLString },
+        notes: { type: GraphQLString },
+        phone: { type: GraphQLString },
     })
 });
 
 const AppointmentType = new GraphQLObjectType({
     name: 'Appointment',
     fields: () => ({
-        id: {type: GraphQLID},
+        id: { type: GraphQLID },
         // we just have to give id
         doctor: {
             type: DoctorType,
@@ -30,17 +29,17 @@ const AppointmentType = new GraphQLObjectType({
                 return Doctors.findById(parent.doctorId);
             }
         },
-        date: {type: GraphQLString},
-        prescription: {type: GraphQLString},
-        cost: {type: GraphQLFloat},
-        notes: {type: GraphQLString},
+        date: { type: GraphQLString },
+        prescription: { type: GraphQLString },
+        cost: { type: GraphQLFloat },
+        notes: { type: GraphQLString },
     })
 })
 
 const FillType = new GraphQLObjectType({
     name: 'Fill',
     fields: () => ({
-        id: {type: GraphQLID},
+        id: { type: GraphQLID },
         // we just have to give id
         appointment: {
             type: AppointmentType,
@@ -48,10 +47,10 @@ const FillType = new GraphQLObjectType({
                 return Appointments.findById(parent.appointmentId);
             }
         },
-        cost: {type: GraphQLFloat},
-        dispensary: {type: GraphQLString},
-        notes: {type: GraphQLString},
-        date: {type: GraphQLString}
+        cost: { type: GraphQLFloat },
+        dispensary: { type: GraphQLString },
+        notes: { type: GraphQLString },
+        date: { type: GraphQLString }
     })
 })
 
@@ -62,40 +61,40 @@ const RootQuery = new GraphQLObjectType({
     fields: {
         doctor: {
             type: DoctorType,
-            args: {id: {type: GraphQLID}},
+            args: { id: { type: GraphQLID } },
             resolve(args) {
                 return Doctors.findById(args.id);
             }
         },
         doctors: {
             type: new GraphQLList(DoctorType),
-            resolve() { 
+            resolve() {
                 return Doctors.find();
             }
         },
         appointment: {
             type: AppointmentType,
-            args: {id: {type: GraphQLID}},
+            args: { id: { type: GraphQLID } },
             resolve(args) {
                 return Appointments.findById(args.id);
             }
         },
         appointments: {
             type: new GraphQLList(AppointmentType),
-            resolve() { 
+            resolve() {
                 return Appointments.find();
             }
         },
         fill: {
             type: FillType,
-            args: {id: {type: GraphQLID}},
+            args: { id: { type: GraphQLID } },
             resolve(args) {
                 return Fills.findById(args.id);
             }
         },
         fills: {
             type: new GraphQLList(FillType),
-            resolve() { 
+            resolve() {
                 return Fills.find();
             }
         },
@@ -109,12 +108,11 @@ const Mutation = new GraphQLObjectType({
         addDoctor: {
             type: DoctorType,
             args: {
-                name: {type: GraphQLNonNull(GraphQLString)},
-                address: {type: GraphQLString},
-                speciality: {type: GraphQLString},
-                notes: {type: GraphQLString},
-                colour: {type: GraphQLNonNull(GraphQLString)},
-                phone: {type: GraphQLString},
+                name: { type: GraphQLNonNull(GraphQLString) },
+                address: { type: GraphQLString },
+                speciality: { type: GraphQLString },
+                notes: { type: GraphQLString },
+                phone: { type: GraphQLString },
             },
             resolve(parent, args) {
                 let doctor = new Doctors({
@@ -122,7 +120,6 @@ const Mutation = new GraphQLObjectType({
                     address: args.address,
                     speciality: args.speciality,
                     notes: args.notes,
-                    colour: args.colour,
                     phone: args.phone,
                 });
                 return doctor.save();
@@ -131,7 +128,7 @@ const Mutation = new GraphQLObjectType({
         deleteDoctor: {
             type: DoctorType,
             args: {
-                id: {type: GraphQLNonNull(GraphQLID)},
+                id: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args) {
                 return Doctors.findByIdAndDelete(args.id);
@@ -140,13 +137,12 @@ const Mutation = new GraphQLObjectType({
         editDoctor: {
             type: DoctorType,
             args: {
-                id: {type: GraphQLNonNull(GraphQLID)},
-                name: {type: GraphQLString},
-                address: {type: GraphQLString},
-                speciality: {type: GraphQLString},
-                notes: {type: GraphQLString},
-                colour: {type: GraphQLString},
-                phone: {type: GraphQLString},
+                id: { type: GraphQLNonNull(GraphQLID) },
+                name: { type: GraphQLString },
+                address: { type: GraphQLString },
+                speciality: { type: GraphQLString },
+                notes: { type: GraphQLString },
+                phone: { type: GraphQLString },
             },
             resolve(parent, args) {
                 return Doctors.findByIdAndUpdate(args.id, args);
@@ -155,11 +151,11 @@ const Mutation = new GraphQLObjectType({
         addAppointment: {
             type: AppointmentType,
             args: {
-                doctorId: {type: GraphQLNonNull(GraphQLID)},
-                date: {type: GraphQLNonNull(GraphQLString)},
-                prescription: {type: GraphQLString},
-                cost: {type: GraphQLFloat},
-                notes: {type: GraphQLString},
+                doctorId: { type: GraphQLNonNull(GraphQLID) },
+                date: { type: GraphQLNonNull(GraphQLString) },
+                prescription: { type: GraphQLString },
+                cost: { type: GraphQLFloat },
+                notes: { type: GraphQLString },
             },
             resolve(parent, args) {
                 let appointment = new Appointments({
@@ -172,10 +168,10 @@ const Mutation = new GraphQLObjectType({
                 return appointment.save();
             }
         },
-        deleteAppointment: {   
+        deleteAppointment: {
             type: AppointmentType,
             args: {
-                id: {type: GraphQLNonNull(GraphQLID)},
+                id: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args) {
                 return Appointments.findByIdAndDelete(args.id);
@@ -184,12 +180,12 @@ const Mutation = new GraphQLObjectType({
         editAppointment: {
             type: AppointmentType,
             args: {
-                id: {type: GraphQLNonNull(GraphQLID)},
-                doctorId: {type: GraphQLID},
-                date: {type: GraphQLString},
-                prescription: {type: GraphQLString},
-                cost: {type: GraphQLFloat},
-                notes: {type: GraphQLString},
+                id: { type: GraphQLNonNull(GraphQLID) },
+                doctorId: { type: GraphQLID },
+                date: { type: GraphQLString },
+                prescription: { type: GraphQLString },
+                cost: { type: GraphQLFloat },
+                notes: { type: GraphQLString },
             },
             resolve(parent, args) {
                 return Appointments.findByIdAndUpdate(args.id, args);
@@ -198,11 +194,11 @@ const Mutation = new GraphQLObjectType({
         addFill: {
             type: FillType,
             args: {
-                appointmentId: {type: GraphQLNonNull(GraphQLID)},
-                cost: {type: GraphQLFloat},
-                dispensary: {type: GraphQLString},
-                notes: {type: GraphQLString},
-                date: {type: GraphQLNonNull(GraphQLString)},
+                appointmentId: { type: GraphQLNonNull(GraphQLID) },
+                cost: { type: GraphQLFloat },
+                dispensary: { type: GraphQLString },
+                notes: { type: GraphQLString },
+                date: { type: GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args) {
                 let fill = new Fills({
@@ -218,7 +214,7 @@ const Mutation = new GraphQLObjectType({
         deleteFill: {
             type: FillType,
             args: {
-                id: {type: GraphQLNonNull(GraphQLID)},
+                id: { type: GraphQLNonNull(GraphQLID) },
             },
             resolve(parent, args) {
                 return Fills.findByIdAndDelete(args.id);
@@ -227,12 +223,12 @@ const Mutation = new GraphQLObjectType({
         editFill: {
             type: FillType,
             args: {
-                id: {type: GraphQLNonNull(GraphQLID)},
-                appointmentId: {type: GraphQLID},
-                cost: {type: GraphQLFloat},
-                dispensary: {type: GraphQLString},
-                notes: {type: GraphQLString},
-                date: {type: GraphQLString},
+                id: { type: GraphQLNonNull(GraphQLID) },
+                appointmentId: { type: GraphQLID },
+                cost: { type: GraphQLFloat },
+                dispensary: { type: GraphQLString },
+                notes: { type: GraphQLString },
+                date: { type: GraphQLString },
             },
             resolve(parent, args) {
                 return Fills.findByIdAndUpdate(args.id, args);

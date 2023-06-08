@@ -5,7 +5,6 @@ const DoctorSchema = new mongoose.Schema({
     address: {type: String},
     speciality: {type: String},
     notes: {type: String},
-    colour: {type: String, required: true},
     phone: {type: String},
 });
 
