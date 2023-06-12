@@ -3,6 +3,7 @@ const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLFloat
 const Doctors = require('../models/Doctor');
 const Appointments = require('../models/Appointment');
 const Fills = require('../models/Fill');
+const Users = require('../models/User');
 
 
 // TYPES 
@@ -53,7 +54,16 @@ const FillType = new GraphQLObjectType({
         date: { type: GraphQLString }
     })
 })
-
+const UserType = new GraphQLObjectType({
+    name: 'User',
+    fields: () => ({
+        id: { type: GraphQLID },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+        username: { type: GraphQLString },
+    })
+});
 
 // ROOT QUERY (get)
 const RootQuery = new GraphQLObjectType({
@@ -96,6 +106,19 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(FillType),
             resolve() {
                 return Fills.find();
+            }
+        },
+        user: {
+            type: UserType,
+            args: { id: { type: GraphQLID } },
+            resolve(args) {
+                return Users.findById(args.id);
+            }
+        },
+        users: {
+            type: new GraphQLList(UserType),
+            resolve() {
+                return Users.find();
             }
         },
     }
@@ -232,6 +255,24 @@ const Mutation = new GraphQLObjectType({
             },
             resolve(parent, args) {
                 return Fills.findByIdAndUpdate(args.id, args);
+            }
+        },
+        addUser: {
+            type: UserType,
+            args: {
+                name: { type: GraphQLNonNull(GraphQLString) },
+                username: { type: GraphQLNonNull(GraphQLString) },
+                email: { type: GraphQLNonNull(GraphQLString) },
+                password: { type: GraphQLNonNull(GraphQLString) },
+            },
+            resolve(parent, args) {
+                let user = new Users({
+                    name: args.name,
+                    email: args.email,
+                    password: args.password,
+                    username: args.username,
+                });
+                return user.save();
             }
         },
     }
